@@ -39,6 +39,64 @@ def get_audio_url(query):
 async def start_cmd(client, message: Message):
     await message.reply_text("👋 Hello! I am Kaanu, an Advanced VC Music Bot. Send /play <song name> to start the party!")
 
+# --- GROUP & UTILITY COMMANDS ---
+
+@app.on_message(filters.command("ping"))
+async def ping_cmd(client, message: Message):
+    await message.reply_text("🏓 Pong! Kaanu Bot is running smoothly.")
+
+@app.on_message(filters.command("ban") & filters.group)
+async def ban_user(client, message: Message):
+    # Check if the user sending the command is an admin with restrict rights
+    member = await client.get_chat_member(message.chat.id, message.from_user.id)
+    if member.privileges and member.privileges.can_restrict_members:
+        if not message.reply_to_message:
+            return await message.reply_text("Bhai, jise ban karna hai uske message par reply karke /ban lagao.")
+        
+        user_id = message.reply_to_message.from_user.id
+        await client.ban_chat_member(message.chat.id, user_id)
+        await message.reply_text(f"🚫 {message.reply_to_message.from_user.first_name} ko group se nikal diya gaya hai.")
+    else:
+        await message.reply_text("❌ Tumhare paas members ko ban karne ki power nahi hai.")
+
+@app.on_message(filters.command("unban") & filters.group)
+async def unban_user(client, message: Message):
+    member = await client.get_chat_member(message.chat.id, message.from_user.id)
+    if member.privileges and member.privileges.can_restrict_members:
+        if not message.reply_to_message:
+            return await message.reply_text("Jise unban karna hai uske message par reply karo.")
+        
+        user_id = message.reply_to_message.from_user.id
+        await client.unban_chat_member(message.chat.id, user_id)
+        await message.reply_text(f"✅ {message.reply_to_message.from_user.first_name} ko unban kar diya gaya hai.")
+    else:
+        await message.reply_text("❌ Tumhare paas members ko unban karne ki power nahi hai.")
+
+@app.on_message(filters.command("pin") & filters.group)
+async def pin_message(client, message: Message):
+    member = await client.get_chat_member(message.chat.id, message.from_user.id)
+    if member.privileges and member.privileges.can_pin_messages:
+        if not message.reply_to_message:
+            return await message.reply_text("Pin karne ke liye kisi message par reply karo.")
+        
+        await message.reply_to_message.pin()
+        await message.reply_text("📌 Message successfully pinned!")
+    else:
+        await message.reply_text("❌ Tumhare paas messages pin karne ki power nahi hai.")
+
+@app.on_message(filters.command("del") & filters.group)
+async def delete_message(client, message: Message):
+    member = await client.get_chat_member(message.chat.id, message.from_user.id)
+    if member.privileges and member.privileges.can_delete_messages:
+        if not message.reply_to_message:
+            return await message.reply_text("Delete karne ke liye message par reply karo.")
+        
+        await message.reply_to_message.delete()
+        await message.delete() # Bot ka /del command bhi delete kar dega taaki chat clean rahe
+    else:
+        await message.reply_text("❌ Tumhare paas messages delete karne ki power nahi hai.")
+
+
 # --- MUSIC & RECOMMEND COMMANDS ---
 @app.on_message(filters.command("recommend"))
 async def recommend_song(client, message: Message):
