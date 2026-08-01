@@ -9,12 +9,12 @@ from pytgcalls.types import MediaStream
 from pytgcalls.types import Update
 
 # --- CONFIGURATION ---
-API_ID = int(os.environ.get("API_ID"))
-API_HASH = os.environ.get("API_HASH")
-BOT_TOKEN = os.environ.get("BOT_TOKEN")
-SESSION_STRING = os.environ.get("SESSION_STRING")
-LASTFM_API_KEY = os.environ.get("LASTFM_API_KEY")
-LASTFM_API_SECRET = os.environ.get("LASTFM_API_SECRET")
+API_ID = int(os.environ.get("36655359")
+API_HASH = os.environ.get("4e41cfaf7e9a37b38a70a9993aa4b346)
+BOT_TOKEN = os.environ.get("7963390569:AAE-TO5kWewMk21ryFe8HV0cKd9Ov5_LLGs")
+SESSION_STRING = os.environ.get("BQId2FsAQ-KGTWEMb-ui21iQmdgfM7d6TzEYi3nsKQ7GyhJ3cJgHm1GnsF1GmwwGpcgCBqSBET1Nq83wAO8i-1IdsDsAB4bUT7AWOqrzZF1SH3KMXZT8bjQZRjeUZVg_TwligsYlOJpco-c_p9L6PdyarZarNRaGYG3llFnpXQk_6wiLzg86qe9Qp7p4EKouUB_xgkvNgmWF5QywudQcPY5-EAELROcNSBVx1p_a5iFKRClGEw3M1kNAeSyquCW1JVjK4s9Zz6Gm63YiaVOPNOV8qfzw4WliHepQIBAm-VjhDvWqr5hp7gQM5JbcmVXUQy2cvs_y5keKxofwsEUqYdjTZRW_2wAAAAIYZUZeAA")
+LASTFM_API_KEY = os.environ.get("c263372e11b94b4e232cf95cade5d6c9")
+LASTFM_API_SECRET = os.environ.get("0ff818fbd13a82b5bfa243a24ef6c282")
 
 # --- CLIENTS ---
 app = Client("music_bot", api_id=API_ID, api_hash=API_HASH, bot_token=BOT_TOKEN)
