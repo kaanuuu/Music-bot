@@ -1,4 +1,4 @@
-# Rathore Advanced Music Bot 🎵
+# Kaanu Advanced Music Bot 🎵
 
 An advanced Telegram Voice Chat Music Bot built with Pyrogram and PyTgCalls. It uses yt-dlp for high-quality audio streaming and integrates the Last.fm API for intelligent track recommendations and continuous Autoplay.
 
