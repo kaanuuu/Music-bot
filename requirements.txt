@@ -1,7 +1,6 @@
-git+https://github.com/pyrogram/pyrogram.git
+hydrogram
 tgcrypto
-ntgcalls
-git+https://github.com/pytgcalls/pytgcalls.git
+py-tgcalls
 pylast
 yt-dlp
 python-dotenv
