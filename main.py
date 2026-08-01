@@ -2,18 +2,23 @@ import os
 import asyncio
 import pylast
 import yt_dlp
-from pyrogram import Client, filters
-from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery
+from hydrogram import Client, filters
+from hydrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery
 from pytgcalls import PyTgCalls, idle
 from pytgcalls.types import MediaStream, Update
 
 # --- CONFIGURATION (Set these in Railway Variables) ---
-API_ID = int(os.environ.get("API_ID", 35510363))
-API_HASH = os.environ.get("API_HASH", "4ca03728dcd04a175ce18f67e74cfb87")
-BOT_TOKEN = os.environ.get("BOT_TOKEN", "8503887915:AAGI3a3JCp8KJR0RZwereQ7Yshz68GOwucE")
-SESSION_STRING = os.environ.get("SESSION_STRING", "BQId2FsAQ-KGTWEMb-ui21iQmdgfM7d6TzEYi3nsKQ7GyhJ3cJgHm1GnsF1GmwwGpcgCBqSBET1Nq83wAO8i-1IdsDsAB4bUT7AWOqrzZF1SH3KMXZT8bjQZRjeUZVg_TwligsYlOJpco-c_p9L6PdyarZarNRaGYG3llFnpXQk_6wiLzg86qe9Qp7p4EKouUB_xgkvNgmWF5QywudQcPY5-EAELROcNSBVx1p_a5iFKRClGEw3M1kNAeSyquCW1JVjK4s9Zz6Gm63YiaVOPNOV8qfzw4WliHepQIBAm-VjhDvWqr5hp7gQM5JbcmVXUQy2cvs_y5keKxofwsEUqYdjTZRW_2wAAAAIYZUZeAA")
-LASTFM_API_KEY = os.environ.get("LASTFM_API_KEY", "c263372e11b94b4e232cf95cade5d6c9")
-LASTFM_API_SECRET = os.environ.get("LASTFM_API_SECRET", "0ff818fbd13a82b5bfa243a24ef6c282")
+API_ID = int(os.environ.get("API_ID", 0))
+API_HASH = os.environ.get("API_HASH", "")
+BOT_TOKEN = os.environ.get("BOT_TOKEN", "")
+SESSION_STRING = os.environ.get("SESSION_STRING", "")
+LASTFM_API_KEY = os.environ.get("LASTFM_API_KEY", "")
+LASTFM_API_SECRET = os.environ.get("LASTFM_API_SECRET", "")
+
+# --- SAFETY LOCK ---
+if not BOT_TOKEN or not SESSION_STRING:
+    print("❌ ERROR: Bot Token ya Session String missing hai ya galat set hua hai Railway me!")
+    exit(1)
 
 # --- CLIENTS ---
 app = Client("music_bot", api_id=API_ID, api_hash=API_HASH, bot_token=BOT_TOKEN)
@@ -32,6 +37,15 @@ def get_audio_url(query):
         info = ydl.extract_info(f"ytsearch:{query}", download=False)['entries'][0]
         return info['url'], info['title']
 
+# --- DM CHAT HANDLER ---
+@app.on_message(filters.private & ~filters.command(["start", "ping", "music", "recommend"]))
+async def dm_chat(client, message: Message):
+    await message.reply_text(
+        "Bhai, main Kaanu Advanced VC Music Bot hoon! 🎧\n\n"
+        "📥 Gaana download karna hai toh type karo: `/music <song name>`\n"
+        "🎵 Group me gaana bajana hai toh mujhe wahan add karo aur type karo: `/play <song name>`"
+    )
+
 # --- GROUP & UTILITY COMMANDS ---
 @app.on_message(filters.command("start"))
 async def start_cmd(client, message: Message):
@@ -39,7 +53,7 @@ async def start_cmd(client, message: Message):
 
 @app.on_message(filters.command("ping"))
 async def ping_cmd(client, message: Message):
-    await message.reply_text("🏓 Pong! Kaanu Bot is running smoothly.")
+    await message.reply_text("🏓 Pong! Kaanu Bot is running smoothly on Hydrogram.")
 
 @app.on_message(filters.command("ban") & filters.group)
 async def ban_user(client, message: Message):
@@ -108,7 +122,6 @@ async def play_vc(client, message: Message):
     try:
         audio_url, title = get_audio_url(query)
         
-        # Play on PyTgCalls v3
         await call_py.play(chat_id, MediaStream(audio_url))
         
         if chat_id not in chat_data:
@@ -129,7 +142,7 @@ async def play_vc(client, message: Message):
         ])
         await m.edit_text(f"▶️ **Playing:** {title}", reply_markup=buttons)
     except Exception as e:
-        await m.edit_text(f"❌ Error: Make sure your Assistant is in the VC.")
+        await m.edit_text(f"❌ Error: Make sure your Assistant is in the VC. Details: {str(e)}")
 
 # --- INLINE BUTTON CALLBACKS ---
 @app.on_callback_query(filters.regex("pause_vc"))
@@ -196,7 +209,7 @@ async def main():
     await app.start()
     await assistant.start()
     await call_py.start()
-    print("🚀 Kaanu Bot is running perfectly!")
+    print("🚀 Kaanu Bot is running perfectly on Hydrogram!")
     await idle()
 
 if __name__ == "__main__":
